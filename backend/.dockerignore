@@ -1,0 +1,30 @@
+# Git stuff
+.git
+.gitignore
+.gitattributes
+
+# Docker (.dockerignore prevents them from being **copied** into the image)
+Dockerfile
+docker-compose.yml
+.docker
+.dockerignore
+
+# Python cache
+**/__pycache__/
+**/*.py[cod]
+
+# Virtual environments
+.env
+.venv
+venv/
+env/
+
+# Build/packaging artifacts
+build/
+dist/
+downloads/
+*.egg-info
+*.egg
+
+# VSCode
+.vscode
