@@ -1,5 +1,7 @@
 from sqlalchemy import String, Float, DateTime, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from datetime import datetime
+from pydantic import BaseModel
 
 # https://github.com/fastapi/full-stack-fastapi-template/blob/master/backend/app/models.py
 
@@ -8,6 +10,7 @@ class Base(DeclarativeBase):
     pass
 
 
+# SQLAlchemy ORM models
 class Sensor(Base):
     __tablename__ = "sensor"
 
@@ -39,3 +42,29 @@ class Measurement(Base):
     )
 
     sensor: Mapped["Sensor"] = relationship(back_populates="measurements")
+
+
+# Properties to receive via API on creation
+
+
+class SensorCreate(BaseModel):
+    chip_id: str
+    friendly_name: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
+
+
+# Reponse model for API
+
+
+class SensorOut(BaseModel):
+    id: int
+    chip_id: str
+    friendly_name: str
+    latitude: float | None = None
+    longitude: float | None = None
+    created_at: datetime
+
+    class Config:
+        # Treat any object like a dict of its attributes.
+        from_attributes = True
