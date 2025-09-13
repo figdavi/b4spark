@@ -44,7 +44,7 @@ class Measurement(Base):
     sensor: Mapped["Sensor"] = relationship(back_populates="measurements")
 
 
-# Properties to receive via API on creation
+# Properties to receive via API
 
 
 class SensorCreate(BaseModel):
@@ -53,6 +53,10 @@ class SensorCreate(BaseModel):
     latitude: float | None = None
     longitude: float | None = None
 
+class SensorUpdate(BaseModel):
+    friendly_name: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
 
 # Reponse model for API
 
