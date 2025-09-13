@@ -6,12 +6,17 @@ from pydantic import BaseModel
 # https://github.com/fastapi/full-stack-fastapi-template/blob/master/backend/app/models.py
 
 
-class Base(DeclarativeBase):
+class BaseORM(DeclarativeBase):
     pass
 
+class BaseOut(BaseModel):
+    class Config:
+        # Treat any object like a dict of its attributes.
+        from_attributes = True
+        
 
 # SQLAlchemy ORM models
-class Sensor(Base):
+class Sensor(BaseORM):
     __tablename__ = "sensor"
 
     # Migrate to UUID, if needed
@@ -27,21 +32,21 @@ class Sensor(Base):
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
 
-    measurements: Mapped[list["Measurement"]] = relationship(back_populates="sensor")
+    readings: Mapped[list["Reading"]] = relationship(back_populates="sensor")
 
 
-class Measurement(Base):
-    __tablename__ = "measurements"
+class Reading(BaseORM):
+    __tablename__ = "reading"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     sensor_id: Mapped[str] = mapped_column(ForeignKey("sensor.id"), nullable=False)
     humidity: Mapped[float] = mapped_column(Float, nullable=True)
     temperature: Mapped[float] = mapped_column(Float, nullable=True)
-    measured_at: Mapped[DateTime] = mapped_column(
+    read_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
 
-    sensor: Mapped["Sensor"] = relationship(back_populates="measurements")
+    sensor: Mapped["Sensor"] = relationship(back_populates="readings")
 
 
 # Properties to receive via API
@@ -61,14 +66,17 @@ class SensorUpdate(BaseModel):
 # Reponse model for API
 
 
-class SensorOut(BaseModel):
+class SensorOut(BaseOut):
     id: int
     chip_id: str
     friendly_name: str
     latitude: float | None = None
     longitude: float | None = None
     created_at: datetime
-
-    class Config:
-        # Treat any object like a dict of its attributes.
-        from_attributes = True
+        
+class ReadingOut(BaseOut):
+    id: int
+    sensor_id: int
+    humidity: float
+    temperature: float
+    read_at: datetime
