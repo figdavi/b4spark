@@ -1,4 +1,4 @@
-from sqlalchemy import String, Float, DateTime, ForeignKey, func
+from sqlalchemy import String, Float, BigInteger, DateTime, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from datetime import datetime
 from pydantic import BaseModel
@@ -9,11 +9,12 @@ from pydantic import BaseModel
 class BaseORM(DeclarativeBase):
     pass
 
+
 class BaseOut(BaseModel):
     class Config:
         # Treat any object like a dict of its attributes.
         from_attributes = True
-        
+
 
 # SQLAlchemy ORM models
 class Sensor(BaseORM):
@@ -21,8 +22,8 @@ class Sensor(BaseORM):
 
     # Migrate to UUID, if needed
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    chip_id: Mapped[str] = mapped_column(
-        String(20), nullable=False, index=True, unique=True
+    chip_id: Mapped[int] = mapped_column(
+        BigInteger, nullable=False, index=True, unique=True
     )
     # Autogenerate friendly name, then make it editable
     friendly_name: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -58,10 +59,12 @@ class SensorCreate(BaseModel):
     latitude: float | None = None
     longitude: float | None = None
 
+
 class SensorUpdate(BaseModel):
     friendly_name: str | None = None
     latitude: float | None = None
     longitude: float | None = None
+
 
 # Reponse model for API
 
@@ -73,7 +76,8 @@ class SensorOut(BaseOut):
     latitude: float | None = None
     longitude: float | None = None
     created_at: datetime
-        
+
+
 class ReadingOut(BaseOut):
     id: int
     sensor_id: int

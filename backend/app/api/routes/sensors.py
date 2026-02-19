@@ -1,5 +1,5 @@
 from datetime import datetime
-from random import randrange
+from random import randint
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
@@ -119,7 +119,7 @@ async def create_fake_reading(sensor_id: int, session: Session = Depends(get_db)
     Create a new (fake) reading by a sensor.
     """
     new_reading = Reading(
-        sensor_id=sensor_id, humidity=randrange(20, 90), temperature=randrange(0, 50)
+        sensor_id=sensor_id, humidity=randint(20, 90), temperature=randint(0, 50)
     )
     session.add(new_reading)
     session.commit()

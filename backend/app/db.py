@@ -5,7 +5,7 @@ from typing import Generator
 from app.models import BaseORM
 
 # TODO: use Pydantic's PostgresDsn
-# TODO: remove hardcoded strings (use config.py and .env file) - https://github.com/fastapi/full-stack-fastapi-template/blob/master/backend/app/core/db.py
+# TODO: remove hardcoded strings (use config.py and .env file) - https://github.com/fastapi/full-stack-fastapi-template/blob/master/backend/app/core/db.py, https://www.reddit.com/r/devops/comments/1g0muvv/do_you_store_secrets_in_environment_variables/
 
 DATABASE_URL = "postgresql+psycopg2://test:1234@localhost:5432/mydb"
 
